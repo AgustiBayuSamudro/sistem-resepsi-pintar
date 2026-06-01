@@ -1,0 +1,5 @@
+pyspark==3.5.0
+kafka-python
+pandas
+minio
+psycopg2-binary

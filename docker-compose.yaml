@@ -16,6 +16,7 @@ x-airflow-common: &airflow-common
     - ./logs:/opt/airflow/logs
     - ./plugins:/opt/airflow/plugins    
     - ./scripts:/opt/airflow/scripts
+    - /var/run/docker.sock:/var/run/docker.sock
   user: "50000:0"
   networks:
     - spark-net

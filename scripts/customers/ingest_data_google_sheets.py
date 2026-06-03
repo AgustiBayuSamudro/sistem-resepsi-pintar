@@ -1,8 +1,9 @@
 from pyspark.sql import SparkSession
+import sys
 
 # Inisialisasi dengan paket eksplisit
 spark = SparkSession.builder \
-    .appName("BMKG_Streaming") \
+    .appName("Resepsi_Streaming") \
     .config("spark.jars.packages", "org.apache.spark:spark-sql-kafka-0-10_2.12:3.5.0,org.apache.hadoop:hadoop-aws:3.3.4") \
     .config("spark.streaming.stopGracefullyOnShutdown", "true") \
     .getOrCreate()
@@ -25,21 +26,37 @@ hadoop_conf.set("fs.s3a.committer.name", "directory")
 hadoop_conf.set("fs.s3a.committer.staging.tmpdn", "/tmp/spark_staging")
 hadoop_conf.set("fs.s3a.buffer.dir", "/tmp/spark_s3a_buffer")
 
-df_kafka = (spark.readStream
+df_undangan = (spark.readStream
     .format("kafka")
     .option("kafka.bootstrap.servers", "kafka:9092")
-    .option("subscribe", "bmkg_topic")
+    .option("subscribe", "undangan_topic")
     .option("startingOffsets", "earliest")
     .option("failOnDataLoss", "false")
     .load())
 
-query = (df_kafka.selectExpr("CAST(value AS STRING)")
+query_undangan = (df_undangan.selectExpr("CAST(value AS STRING)")
     .writeStream
     .format("json") 
-    .option("path", "s3a://etl-data/data-lake/raw/bmkg/")
-    .option("checkpointLocation", "/opt/spark/scripts/streaming/checkpoints/bmkg/")
+    .option("path", "s3a://etl-data/data-lake/raw/resepsi/undangan/")
+    .option("checkpointLocation", "/opt/spark/scripts/streaming/checkpoints/undangan/")
     .trigger(processingTime='5 seconds')
     .start())
 
-print("Streaming Aktif... Memantau Kafka topic 'bmkg_topic'")
-query.awaitTermination()
+df_tamu = (spark.readStream
+    .format("kafka")
+    .option("kafka.bootstrap.servers", "kafka:9092")
+    .option("subscribe", "tamu_topic")
+    .option("startingOffsets", "earliest")
+    .option("failOnDataLoss", "false")
+    .load())
+
+query_tamu = (df_tamu.selectExpr("CAST(value AS STRING)")
+    .writeStream
+    .format("json") 
+    .option("path", "s3a://etl-data/data-lake/raw/resepsi/tamu/")
+    .option("checkpointLocation", "/opt/spark/scripts/streaming/checkpoints/tamu/")
+    .trigger(processingTime='5 seconds')
+    .start())
+
+print("Streaming Aktif... Memantau Kafka topic 'undangan' dan 'tamu' ")
+spark.streams.awaitTermination()  

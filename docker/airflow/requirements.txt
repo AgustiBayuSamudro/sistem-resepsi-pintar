@@ -1,6 +1,6 @@
+pyspark==3.5.0
 requests
 beautifulsoup4
-kafka-python
 boto3
 minio
 cloudscraper

@@ -3,7 +3,7 @@ from pyspark.sql import SparkSession
 # 1. Inisialisasi Spark Session dengan Driver Kafka & AWS S3
 spark = SparkSession.builder \
     .appName("Kafka-to-Bronze-BMKG-SQL") \
-    .config("spark.jars.packages", "org.apache.spark:spark-sql-kafka-0-10_2.12:3.4.1,"
+    .config("spark.jars.packages", "org.apache.spark:spark-sql-kafka-0-10_2.12:3.5.0,"
                                   "org.apache.hadoop:hadoop-aws:3.3.4") \
     .config("spark.hadoop.fs.s3a.endpoint", "http://minio:9000") \
     .config("spark.hadoop.fs.s3a.access.key", "minio") \

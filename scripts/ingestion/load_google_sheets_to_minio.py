@@ -81,7 +81,7 @@ def run_ingestion():
         try:
             sheet = spreadsheet.worksheet(s_name)
             # Mengambil data dengan header di baris ke-3
-            records = sheet.get_all_records(head=3) 
+            records = sheet.get_all_records(head=1) 
             
             last_processed_row = state.get(s_name, 0)
             total_rows = len(records)

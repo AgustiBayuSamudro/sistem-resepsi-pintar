@@ -26,5 +26,4 @@ with DAG(
         bash_command='python /opt/airflow/scripts/ingestion/load_google_sheets_to_minio.py'
     )
     
-ingest_task_bmkg
-ingest_task_resepsi
+[ingest_task_bmkg, ingest_task_resepsi]

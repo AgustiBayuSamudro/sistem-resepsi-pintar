@@ -26,4 +26,14 @@ with DAG(
         bash_command='python /opt/airflow/scripts/ingestion/load_google_sheets_to_minio.py'
     )
     
-[ingest_task_bmkg, ingest_task_resepsi]
+    bronze_task_bmkg = BashOperator(
+        task_id='run_bmkg_batch_bronze',
+        bash_command='python /opt/airflow/scripts/spark/bronze/bmkg_bronze.py'
+    )
+
+    bronze_task_resepsi = BashOperator(
+        task_id='run_sheets_batch_bronze',
+        bash_command='python /opt/airflow/scripts/spark/bronze/resepsi_bronze.py'
+    )
+    ingest_task_bmkg >> bronze_task_bmkg    
+    ingest_task_resepsi

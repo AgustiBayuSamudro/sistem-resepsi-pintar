@@ -138,6 +138,24 @@ services:
     networks:
       - spark-net
 
+  trino:
+    image: trinodb/trino:435
+    container_name: trino
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 2G
+    ports:
+      - "8088:8080"   # beda dari Airflow 8080
+    volumes:
+      - ./trino/catalog:/etc/trino/catalog
+      - trino-data:/data
+    depends_on:
+      - minio
+    networks:
+      - spark-net
+
 networks:
   spark-net:
     driver: bridge
@@ -146,3 +164,4 @@ volumes:
   postgres-db-volume:
   minio-data:  
   spark-ivy-cache:
+  trino-data:

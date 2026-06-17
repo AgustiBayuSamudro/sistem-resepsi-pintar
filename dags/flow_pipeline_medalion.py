@@ -33,7 +33,7 @@ with DAG(
 
     bronze_task_resepsi = BashOperator(
         task_id='run_sheets_batch_bronze',
-        bash_command='python /opt/airflow/scripts/spark/bronze/resepsi_bronze.py'
+        bash_command='python /opt/airflow/scripts/spark/bronze/undangan_bronze.py'
     )
     ingest_task_bmkg >> bronze_task_bmkg    
-    ingest_task_resepsi
+    ingest_task_resepsi >> bronze_task_resepsi

@@ -31,9 +31,14 @@ with DAG(
         bash_command='python /opt/airflow/scripts/spark/bronze/bmkg_bronze.py'
     )
 
-    bronze_task_resepsi = BashOperator(
-        task_id='run_sheets_batch_bronze',
+    bronze_task_undangan = BashOperator(
+        task_id='run_sheets_batch_undangan_bronze',
         bash_command='python /opt/airflow/scripts/spark/bronze/undangan_bronze.py'
     )
+
+    bronze_task_tamu = BashOperator(
+        task_id='run_sheets_batch_tamu_bronze',
+        bash_command='python /opt/airflow/scripts/spark/bronze/tamu_bronze.py'
+    )
     ingest_task_bmkg >> bronze_task_bmkg    
-    ingest_task_resepsi >> bronze_task_resepsi
+    ingest_task_resepsi >> [bronze_task_undangan, bronze_task_tamu]

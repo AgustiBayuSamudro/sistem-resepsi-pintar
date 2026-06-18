@@ -40,5 +40,25 @@ with DAG(
         task_id='run_sheets_batch_tamu_bronze',
         bash_command='python /opt/airflow/scripts/spark/bronze/tamu_bronze.py'
     )
-    ingest_task_bmkg >> bronze_task_bmkg    
-    ingest_task_resepsi >> [bronze_task_undangan, bronze_task_tamu]
+
+    silver_task_cuaca = BashOperator(
+        task_id='run_cuaca_batch_silver',
+        bash_command='python /opt/airflow/scripts/spark/silver/cuaca_silver.py'
+    )
+
+    silver_task_lokasi = BashOperator(
+        task_id='run_lokasi_batch_silver',
+        bash_command='python /opt/airflow/scripts/spark/silver/lokasi_silver.py'
+    )
+
+    silver_task_undangan = BashOperator(
+        task_id='run_sheets_batch_undangan_silver',
+        bash_command='python /opt/airflow/scripts/spark/silver/undangan_silver.py'
+    )
+
+    silver_task_tamu = BashOperator(
+        task_id='run_sheets_batch_tamu_silver',
+        bash_command='python /opt/airflow/scripts/spark/silver/tamu_silver.py'
+    )
+    ingest_task_bmkg >> bronze_task_bmkg >> [silver_task_lokasi, silver_task_cuaca]  
+    ingest_task_resepsi >> [bronze_task_undangan, bronze_task_tamu] >> silver_task_undangan >> silver_task_tamu

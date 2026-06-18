@@ -24,7 +24,7 @@ df_bronze = spark.sql("""
     FROM raw_undangan;
 """)
 
-output_path = "s3a://etl-data/data-lake/bronze/resepsi/undangan"
+output_path = "s3a://etl-data/data-lake/bronze/resepsi/undangan/"
 df_bronze.write.mode("overwrite").parquet(output_path)
 
 print(f"Berhasil! Data bronze undangan tersimpan di: {output_path}")

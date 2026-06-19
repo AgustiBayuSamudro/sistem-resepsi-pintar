@@ -60,5 +60,10 @@ with DAG(
         task_id='run_sheets_batch_tamu_silver',
         bash_command='python /opt/airflow/scripts/spark/silver/tamu_silver.py'
     )
+
+    gold_task_dimtime = BashOperator(
+        task_id='run_dimtime_batch_gold',
+        bash_command='python /opt/airflow/scripts/spark/gold/master_kalender/dim_time_gold.py'
+    )
     ingest_task_bmkg >> bronze_task_bmkg >> [silver_task_lokasi, silver_task_cuaca]  
-    ingest_task_resepsi >> [bronze_task_undangan, bronze_task_tamu] >> silver_task_undangan >> silver_task_tamu
+    ingest_task_resepsi >> [bronze_task_undangan, bronze_task_tamu] >> silver_task_undangan >> silver_task_tamu >> gold_task_dimtime

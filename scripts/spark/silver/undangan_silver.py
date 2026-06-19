@@ -27,7 +27,9 @@ df_silver = spark.sql("""
         TRIM(kode_undangan) kode_undangan,
         initcap(TRIM(nama)) AS nama,
         initcap(TRIM(alamat)) AS alamat,
-        TRIM(jenis_kelamin) AS jenis_kelamin 
+        TRIM(jenis_kelamin) AS jenis_kelamin,
+        CAST(now() AS TIMESTAMP) AS created_at,
+        CAST(now() AS TIMESTAMP) AS updated_at
     FROM silver_undangan;
 """)
 
